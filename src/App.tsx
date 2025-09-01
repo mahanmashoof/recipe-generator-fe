@@ -1,8 +1,33 @@
+import { useState } from "react";
 import Navbar from "./components/Navbar";
 import PortionsSelector from "./components/PortionsSelector";
+import { navbarHeight } from "./global.styles";
+import { useRecipeAPI } from "./hooks/service";
 
 function App() {
-  const navbarHeight = 4;
+  const initialPortions = 4;
+  const [ingredients, setIngredients] = useState("");
+  const [diet, setDiet] = useState("");
+  const [portions, setPortions] = useState(initialPortions);
+  const [cuisine, setCuisine] = useState("");
+
+  const recipeReq = {
+    ingredients,
+    diet,
+    portions,
+    cuisine,
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const recipe = await useRecipeAPI(recipeReq);
+      console.log("Recipe:", recipe);
+    } catch (err) {
+      console.error("Error fetching recipe:", err);
+    }
+  };
+
   return (
     <div className="bg-yellow-500 h-screen">
       <Navbar pHeight={navbarHeight} />
@@ -11,7 +36,10 @@ function App() {
           navbarHeight * 16
         }px)]`}
       >
-        <form className="w-1/3 bg-white/80 rounded-xl shadow-lg flex flex-col gap-6 p-6 justify-start border border-yellow-300">
+        <form
+          className="w-1/3 bg-white/80 rounded-xl shadow-lg flex flex-col gap-6 p-6 justify-start border border-yellow-300"
+          onSubmit={handleSubmit}
+        >
           <h2 className="text-2xl font-bold text-yellow-700 mb-2">
             Recipe Generator
           </h2>
@@ -21,14 +49,19 @@ function App() {
               placeholder="List ingredients here, separated by comma"
               className="p-3 w-full h-24 rounded border border-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
               required
+              onChange={(e) => setIngredients(e.target.value)}
             />
           </label>
           <label className="flex flex-col gap-2 font-medium text-yellow-800">
-            Diet
+            Select Diet
             <select
               className="p-3 rounded border border-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
               required
+              onChange={(e) => setDiet(e.currentTarget.value)}
             >
+              <option value="">Select Diet</option>
+              <option value="balanced">Balanced</option>
+              <option value="high_fiber">High fiber</option>
               <option value="protein_rich">Protein rich</option>
               <option value="vegan">Vegan</option>
               <option value="vegetarian">Vegetarian</option>
@@ -36,7 +69,7 @@ function App() {
           </label>
           <label className="flex flex-col gap-2 font-medium text-yellow-800">
             Portions
-            <PortionsSelector />
+            <PortionsSelector portions={portions} setPortions={setPortions} />
           </label>
           <label className="flex flex-col gap-2 font-medium text-yellow-800">
             Cuisine
@@ -45,6 +78,7 @@ function App() {
               placeholder="e.g. Italian, Thai, Persian"
               type="text"
               required
+              onChange={(e) => setCuisine(e.target.value)}
             />
           </label>
           <button
