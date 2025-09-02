@@ -10,6 +10,7 @@ function App() {
   const [diet, setDiet] = useState("");
   const [portions, setPortions] = useState(initialPortions);
   const [cuisine, setCuisine] = useState("");
+  const [password, setPassword] = useState("");
 
   const recipeReq = {
     ingredients,
@@ -21,7 +22,7 @@ function App() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const recipe = await useRecipeAPI(recipeReq);
+      const recipe = await useRecipeAPI(recipeReq, password);
       console.log("Recipe:", recipe);
     } catch (err) {
       console.error("Error fetching recipe:", err);
@@ -81,6 +82,16 @@ function App() {
               onChange={(e) => setCuisine(e.target.value)}
             />
           </label>
+          <label className="flex flex-col gap-2 font-medium text-yellow-800">
+            Password
+            <input
+              className="p-3 rounded border border-yellow-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+              placeholder="enter correct password to generate recipe"
+              type="password"
+              required
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
           <button
             type="submit"
             className="mt-2 p-3 bg-yellow-500 text-yellow-900 font-semibold rounded-lg shadow hover:bg-yellow-600 transition"
@@ -92,11 +103,7 @@ function App() {
           <h2 className="text-xl font-semibold text-yellow-700 mb-4">
             Your Recipe
           </h2>
-          <textarea
-            defaultValue="Your recipe will appear here..."
-            className="p-3 w-full h-full rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
-            readOnly
-          />
+          <div className="p-3 w-full h-full rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"></div>
         </section>
       </div>
     </div>

@@ -1,13 +1,10 @@
 import axios from "axios";
+import type { RecipeRequest } from "../types";
 
-interface RecipeRequest {
-  ingredients: string;
-  diet: string;
-  portions: number;
-  cuisine: string;
-}
-
-export const useRecipeAPI = async (recipeReq: RecipeRequest) => {
+export const useRecipeAPI = async (
+  recipeReq: RecipeRequest,
+  password: string
+) => {
   try {
     const res = await axios.get("http://localhost:8081/recipe", {
       params: {
@@ -18,7 +15,7 @@ export const useRecipeAPI = async (recipeReq: RecipeRequest) => {
       },
       headers: {
         "Content-Type": "application/json",
-        password: "1979",
+        password: password,
       },
     });
     if (typeof res.data === "string") {
@@ -32,8 +29,11 @@ export const useRecipeAPI = async (recipeReq: RecipeRequest) => {
       }
     }
     return res.data;
-  } catch (err) {
-    console.error("Error fetching recipe:", err);
-    throw err;
+  } catch (err: any) {
+    if (err.status === 401) {
+      alert("Incorrect password");
+    } else {
+      console.error("Error in API call:", err);
+    }
   }
 };
