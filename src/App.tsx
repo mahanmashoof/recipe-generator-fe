@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "./components/Navbar";
 import PortionsSelector from "./components/PortionsSelector";
 import { navbarHeight } from "./global.styles";
-import { useRecipeAPI } from "./hooks/service";
+import { useRecipeApiFilter } from "./hooks/filter";
 
 function App() {
   const initialPortions = 4;
@@ -22,7 +22,7 @@ function App() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const recipe = await useRecipeAPI(recipeReq, password);
+      const recipe = await useRecipeApiFilter(recipeReq, password);
       console.log("Recipe:", recipe);
     } catch (err) {
       console.error("Error fetching recipe:", err);

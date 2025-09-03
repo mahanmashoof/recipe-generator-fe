@@ -31,7 +31,7 @@ export const useRecipeAPI = async (
     return res.data;
   } catch (err: any) {
     if (err.status === 401) {
-      alert("Incorrect password");
+      return "Incorrect password";
     } else {
       console.error("Error in API call:", err);
     }
