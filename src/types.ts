@@ -4,3 +4,13 @@ export interface RecipeRequest {
   portions: number;
   cuisine: string;
 }
+
+export interface FilteredRecipeData {
+  title: string;
+  ingredients: {
+    title: string;
+    quantity: number;
+    unitOfMeasurement: string;
+  }[];
+  steps: string[];
+}

@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import PortionsSelector from "./components/PortionsSelector";
 import { navbarHeight } from "./global.styles";
 import { useRecipeApiFilter } from "./hooks/filter";
+import { useRecipeAPI } from "./hooks/service";
 
 function App() {
   const initialPortions = 4;
@@ -19,11 +20,18 @@ function App() {
     cuisine,
   };
 
+  const {
+    filteredData: data,
+    loading,
+    fetchRecipe,
+  } = useRecipeApiFilter(recipeReq, password);
+  // const { data, loading, fetchRecipe } = useRecipeAPI(recipeReq, password);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const recipe = await useRecipeApiFilter(recipeReq, password);
-      console.log("Recipe:", recipe);
+      await fetchRecipe();
+      console.log("Fetched data:", data);
     } catch (err) {
       console.error("Error fetching recipe:", err);
     }
@@ -101,9 +109,11 @@ function App() {
         </form>
         <section className="w-2/3 bg-white/70 rounded-xl shadow-lg p-6 flex flex-col">
           <h2 className="text-xl font-semibold text-yellow-700 mb-4">
-            Your Recipe
+            Generated Recipe
           </h2>
-          <div className="p-3 w-full h-full rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"></div>
+          <div className="p-3 w-full h-full rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
+            {loading ? "Loading..." : data ? "data in console" : ""}
+          </div>
         </section>
       </div>
     </div>

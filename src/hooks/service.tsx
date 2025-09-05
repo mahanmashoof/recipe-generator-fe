@@ -1,39 +1,35 @@
 import axios from "axios";
 import type { RecipeRequest } from "../types";
+import { useState } from "react";
 
-export const useRecipeAPI = async (
-  recipeReq: RecipeRequest,
-  password: string
-) => {
-  try {
-    const res = await axios.get("http://localhost:8081/recipe", {
-      params: {
-        ingredients: recipeReq.ingredients,
-        dietType: recipeReq.diet,
-        portions: recipeReq.portions,
-        cuisine: recipeReq.cuisine,
-      },
-      headers: {
-        "Content-Type": "application/json",
-        password: password,
-      },
-    });
-    if (typeof res.data === "string") {
-      try {
-        const jsonString = res.data.match(/```json\n([\s\S]*)\n```/)?.[1];
-        if (jsonString) {
-          return JSON.parse(jsonString);
-        }
-      } catch (parseError) {
-        console.error("Error parsing stringified JSON:", parseError);
+export const useRecipeAPI = (recipeReq: RecipeRequest, password: string) => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState("");
+  const fetchRecipe = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get("http://localhost:8081/recipe", {
+        params: {
+          ingredients: recipeReq.ingredients,
+          dietType: recipeReq.diet,
+          portions: recipeReq.portions,
+          cuisine: recipeReq.cuisine,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          password: password,
+        },
+      });
+      setData(res.data);
+    } catch (err: any) {
+      if (err.status === 401) {
+        return "Incorrect password";
+      } else {
+        console.error("Error in API call:", err);
       }
+    } finally {
+      setLoading(false);
     }
-    return res.data;
-  } catch (err: any) {
-    if (err.status === 401) {
-      return "Incorrect password";
-    } else {
-      console.error("Error in API call:", err);
-    }
-  }
+  };
+  return { loading, data, fetchRecipe };
 };
