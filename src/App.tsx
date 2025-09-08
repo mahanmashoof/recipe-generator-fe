@@ -3,7 +3,7 @@ import Navbar from "./components/Navbar";
 import PortionsSelector from "./components/PortionsSelector";
 import { navbarHeight } from "./global.styles";
 import { useRecipeApiFilter } from "./hooks/filter";
-import { useRecipeAPI } from "./hooks/service";
+import Loading from "./components/Loading";
 
 function App() {
   const initialPortions = 4;
@@ -25,7 +25,6 @@ function App() {
     loading,
     fetchRecipe,
   } = useRecipeApiFilter(recipeReq, password);
-  // const { data, loading, fetchRecipe } = useRecipeAPI(recipeReq, password);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -112,7 +111,13 @@ function App() {
             Generated Recipe
           </h2>
           <div className="p-3 w-full h-full rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
-            {loading ? "Loading..." : data ? "data in console" : ""}
+            {loading ? (
+              <Loading />
+            ) : data && data.title.length > 0 ? (
+              "data in console"
+            ) : (
+              ""
+            )}
           </div>
         </section>
       </div>
