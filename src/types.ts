@@ -9,7 +9,7 @@ export interface FilteredRecipeData {
   title: string;
   ingredients: {
     title: string;
-    quantity: number;
+    quantity: string;
     unitOfMeasurement: string;
   }[];
   steps: string[];

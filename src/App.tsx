@@ -4,6 +4,7 @@ import PortionsSelector from "./components/PortionsSelector";
 import { navbarHeight } from "./global.styles";
 import { useRecipeApiFilter } from "./hooks/filter";
 import Loading from "./components/Loading";
+import RecipeUI from "./components/RecipeUI";
 
 function App() {
   const initialPortions = 4;
@@ -30,19 +31,17 @@ function App() {
     e.preventDefault();
     try {
       await fetchRecipe();
-      console.log("Fetched data:", data);
     } catch (err) {
       console.error("Error fetching recipe:", err);
     }
   };
 
   return (
-    <div className="bg-yellow-500 h-screen">
+    <div className="bg-yellow-500 max-h-screen overflow-hidden">
       <Navbar pHeight={navbarHeight} />
       <div
-        className={`p-8 flex md:flex-row flex-col gap-8 h-[calc(100vh-${
-          navbarHeight * 16
-        }px)]`}
+        className={`p-8 flex md:flex-row flex-col gap-8`}
+        style={{ height: `calc(100vh - ${navbarHeight * 16}px)` }}
       >
         <form
           className="w-1/3 bg-white/80 rounded-xl shadow-lg flex flex-col gap-6 p-6 justify-start border border-yellow-300"
@@ -110,14 +109,8 @@ function App() {
           <h2 className="text-xl font-semibold text-yellow-700 mb-4">
             Generated Recipe
           </h2>
-          <div className="p-3 w-full h-full rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition">
-            {loading ? (
-              <Loading />
-            ) : data && data.title.length > 0 ? (
-              "data in console"
-            ) : (
-              ""
-            )}
+          <div className="p-3 w-full h-[70vh] rounded border border-yellow-200 bg-yellow-50 resize-none focus:outline-none focus:ring-2 focus:ring-yellow-400 transition overflow-y-scroll">
+            {loading ? <Loading /> : data && <RecipeUI {...data} />}
           </div>
         </section>
       </div>
