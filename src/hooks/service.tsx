@@ -8,21 +8,29 @@ export const useRecipeAPI = (recipeReq: RecipeRequest, password: string) => {
   const fetchRecipe = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:8081/recipe", {
-        params: {
-          ingredients: recipeReq.ingredients,
-          dietType: recipeReq.diet,
-          portions: recipeReq.portions,
-          cuisine: recipeReq.cuisine,
-        },
-        headers: {
-          "Content-Type": "application/json",
-          password: password,
-        },
-      });
+      const res = await axios.get(
+        "https://recipe-generator-enci.onrender.com/recipe",
+        {
+          params: {
+            ingredients: recipeReq.ingredients,
+            dietType: recipeReq.diet,
+            portions: recipeReq.portions,
+            cuisine: recipeReq.cuisine,
+          },
+          headers: {
+            "Content-Type": "application/json",
+            password: password,
+          },
+        }
+      );
       setData(res.data);
-    } catch (err: any) {
-      if (err.status === 401) {
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "status" in err &&
+        (err as { status?: number }).status === 401
+      ) {
         return "Incorrect password";
       } else {
         console.error("Error in API call:", err);
