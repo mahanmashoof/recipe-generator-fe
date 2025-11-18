@@ -21,7 +21,7 @@ function PortionsSelector(props: IProps) {
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 md:gap-3">
       <button
         type="button"
         onClick={() => updateValue(-step)}
@@ -39,7 +39,7 @@ function PortionsSelector(props: IProps) {
         min={min}
         step={step}
         onChange={handleChange}
-        className="w-16 h-10 text-center border-2 border-yellow-200 rounded-lg font-semibold text-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
+        className="w-14 md:w-16 h-9 md:h-10 text-center border-2 border-yellow-200 rounded-lg font-semibold text-sm md:text-base text-yellow-900 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
         required
         aria-label="Portion count"
       />
